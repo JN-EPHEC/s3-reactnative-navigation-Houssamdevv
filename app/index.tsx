@@ -1,7 +1,7 @@
 // ...existing code...
 import { useRouter } from "expo-router";
 import { useEffect } from "react";
-import { View, Text, InteractionManager, Platform } from "react-native";
+import { View, Text, InteractionManager } from "react-native";
 
 export default function Index() {
   const router = useRouter();
@@ -15,35 +15,33 @@ export default function Index() {
     const tryReplace = async (attempt = 0) => {
       if (!mounted) return;
       try {
-        router.replace("/screens/PostListScreen");
+        router.replace("/(tabs)/home");
       } catch (err: unknown) {
         if (!mounted) return;
         if (attempt >= maxAttempts) {
           console.error("Impossible de rediriger après plusieurs tentatives:", err);
           return;
         }
-        // Backoff simple
+        // backoff simple puis nouvelle tentative
         await sleep(100 * (attempt + 1));
         return tryReplace(attempt + 1);
       }
     };
 
-    // Sur native, attendre la fin des interactions aide à s'assurer que la Root Layout est montée.
-    // Sur web, runAfterInteractions fonctionne aussi ; sinon on tombe sur setTimeout minimal.
     const run = () => {
-      if (InteractionManager && InteractionManager.runAfterInteractions) {
+      // Attendre la fin des interactions native (sécurise le montage du Root Layout)
+      if (InteractionManager?.runAfterInteractions) {
         InteractionManager.runAfterInteractions(() => {
           if (mounted) tryReplace();
         });
       } else {
-        // fallback (shouldn't être nécessaire mais sécurise l'exécution sur web)
+        // fallback web / sécurisé
         setTimeout(() => {
           if (mounted) tryReplace();
         }, 50);
       }
     };
 
-    // Lancer la tentative
     run();
 
     return () => {
@@ -52,7 +50,7 @@ export default function Index() {
   }, [router]);
 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Text>Chargement...</Text>
     </View>
   );
