@@ -1,16 +1,12 @@
-import "react-native-reanimated";
-
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import PostListScreen from "./screens/PostListScreen";
-import PostDetailScreen from "./screens/PostDetailScreen";
-
-export type RootStackParamList = {
-  PostList: undefined;
-  PostDetail: { postId: string; title: string; content: string };
-};
+// ...existing code...
+import React from "react";
+import { Stack } from "expo-router";
 
 export default function RootLayout() {
-  const Stack = createNativeStackNavigator<RootStackParamList>();
-
-  return <>{/* Your code here for the stack navigator */}</>;
+  return (
+    // initialRouteName doit être le nom de la route basée sur l'arborescence des fichiers
+    // ici on demande d'ouvrir automatiquement screens/PostListScreen au démarrage.
+    <Stack initialRouteName="screens/PostListScreen" />
+  );
 }
+// ...existing code...

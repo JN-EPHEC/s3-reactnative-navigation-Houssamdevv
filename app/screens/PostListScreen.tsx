@@ -1,68 +1,38 @@
-import React from "react";
-import { StyleSheet, Pressable, FlatList, Text, View } from "react-native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../_layout";
-
-type Props = NativeStackScreenProps<RootStackParamList, "PostList">;
+import { View, Text, Pressable, StyleSheet } from "react-native";
+import { router } from "expo-router";
 
 const POSTS = [
-  {
-    id: "1",
-    title: "React Native is Awesome",
-    content:
-      "React Native lets you build mobile apps using only JavaScript. Learn once, write anywhere! This is a fake post used for the exercise.",
-  },
-  {
-    id: "2",
-    title: "State Management Tips",
-    content:
-      "Managing state can be tricky. Use simple patterns first, then introduce libraries when needed. This is sample content for the exercise.",
-  },
-  {
-    id: "3",
-    title: "UI Design Principles",
-    content:
-      "Good UI is about clarity and consistency. Keep interfaces simple and predictable. More sample content here.",
-  },
-  {
-    id: "4",
-    title: "Optimizing Performance",
-    content:
-      "Profile first, then optimize. Use proper list virtualization and avoid unnecessary renders. This is dummy text.",
-  },
+  { title: "React Native is Awesome", content: "Lorem ipsum about RN…" },
+  { title: "State Management Tips", content: "Redux? Zustand? Context?…" },
+  { title: "UI Design Principles", content: "Hierarchy, spacing, contrast…" },
+  { title: "Navigation Best Practices", content: "Stacks, Tabs, Drawers…" },
 ];
 
-export default function PostListScreen({ navigation }: Props) {
-  function renderItem({ item }: { item: (typeof POSTS)[number] }) {
-    return (
-      <>
-        {/* Replace this with your code here for each item to render (Use Pressable Component) */}
-      </>
-    );
-  }
-
+export default function PostListScreen() {
   return (
     <View style={styles.container}>
-      {/* Replace this with your code to render the list of items */}
+      <Text style={styles.h1}>My Blog</Text>
+      {POSTS.map((p) => (
+        <Pressable
+          key={p.title}
+          style={styles.item}
+          onPress={() =>
+            router.push({
+              pathname: "/screens/PostDetailScreen",
+              params: { title: p.title, content: p.content },
+            })
+          }
+        >
+          <Text style={styles.link}>{p.title}</Text>
+        </Pressable>
+      ))}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  list: {
-    padding: 16,
-  },
-  item: {
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    marginBottom: 12,
-    backgroundColor: "rgba(0,0,0,0.03)",
-  },
-  itemPressed: {
-    opacity: 0.7,
-  },
+  container: { flex: 1, padding: 16, gap: 12 },
+  h1: { fontSize: 22, fontWeight: "700", marginBottom: 8 },
+  item: { paddingVertical: 12 },
+  link: { color: "#2563eb", fontSize: 16 },
 });
